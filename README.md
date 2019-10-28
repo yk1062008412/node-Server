@@ -6,6 +6,8 @@ This project is based on Node + ExpressJs + Mysql2.
 
 A Node Server
 
+- Node 12.11.1
+
 # Install
 
 ```
