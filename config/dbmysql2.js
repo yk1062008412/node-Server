@@ -14,4 +14,4 @@ module.exports = mysql.createPool({
     waitForConnections: true, // if true, connection queue will waiting can be used connect; if false immediately throw Error.
     connectionLimit: 10, // Maximum number of connections that can be created at a time
     queueLimit: 0 // The max request quantity. line up at the head of getConnection function. 0: unlimited
-}).promise();
+});

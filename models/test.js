@@ -25,7 +25,7 @@ const getMyTestChracter = (req, res, dic) => {
     //     .catch(err => {
     //         return err;
     //     })
-    res.status(200).json({ user: 'tobi' })
+    res.status(200).json({ user: 'testok' })
 }
 
 

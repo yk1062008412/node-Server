@@ -36,6 +36,12 @@ post: http://localhost:3001/userName
 
 # Document
 
+```
+1. jsonwebtoken生成token
+2. express-jwt验证token是否过期或失效
+3. jsonwebtoken解析出token中的用户信息，比如用户id
+```
+
 # Contributing
 
 # License

@@ -27,4 +27,8 @@ router.post('/userName', function (req, res) {
     TestModel.getMyTestChracter(req, res);
 })
 
+router.post('/getMyTestChracter', function(req, res) {
+    TestModel.getMyTestChracter(req, res);
+})
+
 module.exports = router;
