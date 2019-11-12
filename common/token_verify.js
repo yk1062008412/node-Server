@@ -8,7 +8,7 @@ exports.setToken = function(userName, userId, adm_phone, id) {
             user_account: userId,
             user_phone: adm_phone,
             user_id: id
-        }, signkey, { expiresIn: 10 });
+        }, signkey, { expiresIn: 60 * 60 * 24 });
         resolve(token);
     })
 }
