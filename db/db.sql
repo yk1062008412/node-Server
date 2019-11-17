@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `order_info`(
     `goods_img_url` varchar(255) DEFAULT '' COMMENT '图片URL',
     `img_url_id` int(11) COMMENT '图片ID',
     `cost_price` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '商品原价',
-    `last_time` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '最终成交价',
+    `last_price` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '最终成交价',
     `goods_num` int(11) NOT NULL DEFAULT 0 COMMENT '商品数量',
     PRIMARY KEY(`order_info_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单详情明细';
