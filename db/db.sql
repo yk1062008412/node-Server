@@ -213,6 +213,9 @@ CREATE TABLE IF NOT EXISTS `special_goods`(
     `stock` int(11) DEFAULT 0 COMMENT '特价库存',
     `goods_img_url` varchar(255) DEFAULT '' COMMENT '图片URL',
     `img_url_id` int(11) COMMENT '图片文件ID',
-    `special_index` int(11) DEFAULT 0 COMMENT '特价商品排序序号',
-    PRIMARY KEY(`special_id`)
+    `special_index` int(11) DEFAULT 0 COMMENT '特价商品排序序号'
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='每日特价商品';
+-- 支付信息
+-- CREATE TABLE IF NOT EXISTS `pay_info`(
+    
+-- )ENGINE=InnoDB DEFAULT CHARSET=utf8;

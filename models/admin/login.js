@@ -1,4 +1,10 @@
-const resStatus = require('../../common/res_status');
+/*
+ * @Author: yk1062008412
+ * @Date: 2019-10-31 22:08:18
+ * @LastEditors: yk1062008412
+ * @LastEditTime: 2019-11-15 22:40:03
+ * @Description: 登录信息
+ */
 const my_connection = require('../../config/dbmysql2');
 const tokenVerify = require('../../common/token_verify');
 
@@ -6,7 +12,7 @@ const tokenVerify = require('../../common/token_verify');
 const loginSystem = (req, res) => {
     const { userName, passWord } = req.body;
     // console.log(req.body.userName, req.body.passWord);
-    my_connection.query('SELECT * FROM admin_account WHERE adm_account = ? AND adm_passwd = md5(?)', [userName, passWord], (err, rows) => {
+    my_connection.query('SELECT * FROM admin_account WHERE adm_account = ? AND adm_passwd = md5(?) AND del_flag = 0', [userName, passWord], (err, rows) => {
         if(err){
             throw err;
         }
@@ -14,16 +20,11 @@ const loginSystem = (req, res) => {
             // res.status(200).send(resStatus.successParams('success', 0));
             req.session.userName = rows[0].userName;
             const { adm_name, adm_account, adm_phone, id } = rows[0];
+            // 设置token
             tokenVerify.setToken(adm_name, adm_account, adm_phone, id).then(data => {
                 return res.status(200).json({ code: 0, des: 'login success', token: data})
             })
-            // return next()
-            // res.status(200).send({
-            //     code: 0
-            // })
         }else{
-            // res.status(200).send(resStatus.successParams('success', -1));
-            // req.session.userName = null;
             res.status(200).send({
                 code: -1
             })

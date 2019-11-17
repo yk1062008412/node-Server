@@ -1,9 +1,17 @@
+/*
+ * @Author: yk1062008412
+ * @Date: 2019-10-28 22:31:07
+ * @LastEditors: yk1062008412
+ * @LastEditTime: 2019-11-15 22:37:57
+ * @Description: file content
+ */
 const express = require('express');
 const app = express();
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const testRouter = require('./routers/test');
 const loginRouter = require('./routers/admin/login');
+const categoryRouter = require('./routers/admin/category');
 const expressJwt = require('express-jwt');
 const vertoken = require('./common/token_verify');
 
@@ -62,6 +70,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/test', testRouter);
 app.use('/login', loginRouter);
+app.use('/category', categoryRouter);
 
 //当token失效返回提示信息
 app.use(function(err, req, res, next) {
