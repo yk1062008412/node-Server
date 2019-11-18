@@ -159,14 +159,20 @@ CREATE TABLE IF NOT EXISTS `order_info`(
 -- 文件存储
 CREATE TABLE IF NOT EXISTS `file_info`(
     `img_url_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '文件ID',
-    `file_number` varchar(255) NOT NULL DEFAULT '' COMMENT '文件编号',
+    `file_number` varchar(255) DEFAULT '未命名' COMMENT '文件名称(管理员修改)',
     `add_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
     `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
     `file_size` varchar(255) DEFAULT '' COMMENT '文件大小',
-    `file_tyle` varchar(20) DEFAULT '' COMMENT '文件类型',
+    `file_type` varchar(20) DEFAULT '' COMMENT '文件类型',
     `file_url` varchar(255) DEFAULT '' COMMENT '文件在服务器中的地址',
     `file_comment` varchar(255) DEFAULT '' COMMENT '文件备注信息',
     `add_adm_account` varchar(30) DEFAULT '' COMMENT '添加图片的管理员账号',
+    `filed_name` varchar(255) DEFAULT '' COMMENT 'Field name 由表单指定',
+    `origin_name` varchar(255) DEFAULT '' COMMENT '用户计算机上的文件的名称',
+    `encoding` varchar(50) DEFAULT '' COMMENT '文件编码',
+    `mime_type` varchar(100) DEFAULT '' COMMENT '文件的 MIME 类型',
+    `destination` varchar(100) DEFAULT '' COMMENT '服务器上的路径',
+    `filename` varchar(100) DEFAULT '' COMMENT '服务器上的文件名',
     `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '删除标记0.未删除1.已删除',
     PRIMARY KEY(`img_url_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件存储信息';
@@ -213,7 +219,8 @@ CREATE TABLE IF NOT EXISTS `special_goods`(
     `stock` int(11) DEFAULT 0 COMMENT '特价库存',
     `goods_img_url` varchar(255) DEFAULT '' COMMENT '图片URL',
     `img_url_id` int(11) COMMENT '图片文件ID',
-    `special_index` int(11) DEFAULT 0 COMMENT '特价商品排序序号'
+    `special_index` int(11) DEFAULT 0 COMMENT '特价商品排序序号',
+    PRIMARY KEY(`special_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='每日特价商品';
 -- 支付信息
 -- CREATE TABLE IF NOT EXISTS `pay_info`(

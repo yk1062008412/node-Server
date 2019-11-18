@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-10-28 22:31:07
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-17 22:35:36
+ * @LastEditTime: 2019-11-18 23:28:12
  * @Description: file content
  */
 const express = require('express');
@@ -10,7 +10,7 @@ const app = express();
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
-const uploadRouter = require('./common/file_upload');
+const fileRouter = require('./routers/common/file_upload');
 const testRouter = require('./routers/test');
 const loginRouter = require('./routers/admin/login');
 const categoryRouter = require('./routers/admin/category');
@@ -74,7 +74,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/upload', uploadRouter);
+app.use('/file', fileRouter);
 app.use('/test', testRouter);
 app.use('/login', loginRouter);
 app.use('/category', categoryRouter);
