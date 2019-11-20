@@ -2,14 +2,14 @@
  * @Author: yk1062008412
  * @Date: 2019-11-17 17:35:13
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-17 20:34:00
+ * @LastEditTime: 2019-11-20 22:57:46
  * @Description: 商品信息
  */
 const my_connection = require('../../config/dbmysql2');
 
 // 获取商品信息列表
 const getGoodsList = (req, res) => {
-    my_connection.query('SELECT * FROM goods_info WHERE del_flag = 0', [], (err, rows) => {
+    my_connection.query('SELECT * FROM goods_info WHERE del_flag = 0 ORDER BY goods_index ASC', [], (err, rows) => {
         if(err){
             throw err;
         }

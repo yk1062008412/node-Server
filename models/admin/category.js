@@ -2,14 +2,14 @@
  * @Author: yk1062008412
  * @Date: 2019-10-31 22:08:18
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-17 20:35:29
+ * @LastEditTime: 2019-11-20 22:57:19
  * @Description: 商品类目信息
  */
 const my_connection = require('../../config/dbmysql2');
 
 // 获取商品类目列表
 const getCategoryList = (req, res) => {
-    my_connection.query('SELECT * FROM goods_category WHERE del_flag = 0', [], (err, rows) => {
+    my_connection.query('SELECT * FROM goods_category WHERE del_flag = 0 ORDER BY category_index ASC', [], (err, rows) => {
         if(err){
             throw err;
         }
@@ -20,7 +20,7 @@ const getCategoryList = (req, res) => {
 // 获取商品类目详情
 const getCategoryDetail = (req, res) => {
     const { categoryId } = req.body;
-    my_connection.query('SELECT * FROM goods_category WHERE category_id = ? AND del_flag = 0', [categoryId], (err, rows) => {
+    my_connection.query('SELECT * FROM goods_category WHERE category_id = ?', [categoryId], (err, rows) => {
         if(err){
             throw err;
         }

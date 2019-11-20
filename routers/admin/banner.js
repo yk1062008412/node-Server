@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-11-17 20:40:56
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-17 20:55:26
+ * @LastEditTime: 2019-11-20 22:15:28
  * @Description: banner轮播图
  */
 const express = require('express');
@@ -38,7 +38,5 @@ router.post('/bannerPopUp', function(req, res){
 router.post('/bannerDelete', function(req, res){
     bannerModel.bannerDelete(req, res);
 })
-
-
 
 module.exports = router;

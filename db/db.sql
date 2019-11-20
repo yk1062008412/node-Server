@@ -197,6 +197,7 @@ CREATE TABLE IF NOT EXISTS `banner_goods`(
     `banner_goods_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '对应关系ID',
     `banner_id` int(11) NOT NULL COMMENT 'banner图ID',
     `goods_id` int(11) NOT NULL COMMENT '商品ID',
+    `banner_goods_index` int(11) DEFAULT 0 COMMENT 'banner商品排序',
     `add_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
     `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
     `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '删除标记0.未删除1.已删除',

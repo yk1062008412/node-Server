@@ -2,14 +2,14 @@
  * @Author: yk1062008412
  * @Date: 2019-11-17 20:41:29
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-17 21:16:07
+ * @LastEditTime: 2019-11-20 22:56:21
  * @Description: banner轮播图
  */
 const my_connection = require('../../config/dbmysql2');
 
-// 获取商品类目列表
+// 获取banner图列表
 const getBannerList = (req, res) => {
-    my_connection.query('SELECT * FROM banner_info WHERE del_flag = 0', [], (err, rows) => {
+    my_connection.query('SELECT * FROM banner_info WHERE del_flag = 0 ORDER BY banner_index ASC', [], (err, rows) => {
         if(err){
             throw err;
         }

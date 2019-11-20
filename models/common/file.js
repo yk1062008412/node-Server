@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-11-18 23:02:10
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-18 23:54:48
+ * @LastEditTime: 2019-11-20 22:01:43
  * @Description: 文件操作
  */
 const my_connection = require('../../config/dbmysql2');
@@ -27,7 +27,6 @@ const fileAdd = async (req, res) => {
     await tokenVerify.verifyToken(token).then(data => {
         user_account = data.user_account;
     })
-    // 获取文件信息
     const { fieldname, originalname, encoding, mimetype, destination, filename, path, size} = req.files[0];
     const filetype = (originalname).split('.').pop();
     const addSql = `INSERT INTO file_info (file_size, file_type, file_url,
@@ -42,9 +41,33 @@ const fileAdd = async (req, res) => {
     })
 }
 
+// 修改文件信息
+const fileEdit = (req, res) => {
+    const { fileNumber, fileComment, imgUrlId } = req.body;
+    my_connection.query('UPDATE file_info SET file_number=?, file_comment=? WHERE img_url_id=?', [fileNumber, fileComment, imgUrlId], (err, rows) => {
+        if(err){
+            throw err;
+        }
+        return res.status(200).json({ code: 0, data: '修改成功'})
+    })
+}
+
+// 删除图片文件
+const fileDelete = (req, res) => {
+    const { imgUrlId } = req,body;
+    my_connection.query('UPDATE file_info SET del_flag=1 WHERE img_url_id=?', [imgUrlId], (err, rows) => {
+        if(err){
+            throw err;
+        }
+        return res.status(200).json({ code: 0, data: '删除成功' })
+    })
+}
+
 
 module.exports = {
     fileList,
-    fileAdd
+    fileAdd,
+    fileEdit,
+    fileDelete
 }
 
