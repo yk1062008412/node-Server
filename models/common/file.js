@@ -2,12 +2,11 @@
  * @Author: yk1062008412
  * @Date: 2019-11-18 23:02:10
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-20 22:01:43
+ * @LastEditTime: 2019-11-21 22:41:14
  * @Description: 文件操作
  */
 const my_connection = require('../../config/dbmysql2');
-const tokenVerify = require('../../common/token_verify');
-
+import { getUserAccount } from '../common/getToken';
 
 // 获取文件信息
 const fileList = (req, res) => {
@@ -22,11 +21,7 @@ const fileList = (req, res) => {
 // 新增文件
 const fileAdd = async (req, res) => {
     // 获取上传文件的管理员名称
-    const token = req.headers.authorization;
-    let user_account = 'unKnown';
-    await tokenVerify.verifyToken(token).then(data => {
-        user_account = data.user_account;
-    })
+    const user_account = await getUserAccount(req.headers.authorization);
     const { fieldname, originalname, encoding, mimetype, destination, filename, path, size} = req.files[0];
     const filetype = (originalname).split('.').pop();
     const addSql = `INSERT INTO file_info (file_size, file_type, file_url,

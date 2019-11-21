@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-10-31 22:08:18
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-15 22:40:03
+ * @LastEditTime: 2019-11-21 22:43:37
  * @Description: 登录信息
  */
 const my_connection = require('../../config/dbmysql2');
@@ -22,7 +22,7 @@ const loginSystem = (req, res) => {
             const { adm_name, adm_account, adm_phone, id } = rows[0];
             // 设置token
             tokenVerify.setToken(adm_name, adm_account, adm_phone, id).then(data => {
-                return res.status(200).json({ code: 0, des: 'login success', token: data})
+                return res.status(200).json({ code: 0, des: '登录成功', token: data})
             })
         }else{
             res.status(200).send({

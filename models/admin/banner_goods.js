@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-11-20 22:18:36
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-20 22:55:13
+ * @LastEditTime: 2019-11-21 22:44:29
  * @Description: banner图对应的商品
  */
 const my_connection = require('../../config/dbmysql2');
@@ -13,7 +13,7 @@ const getBannerGoodsList = (req, res) => {
         if(err){
             throw err;
         }
-        return res.status(200).json({ code: 0, data: rows})
+        return res.status(200).json({ code: 0, data: rows })
     })
 }
 
@@ -25,7 +25,7 @@ const bannerGoodsAdd = (req, res) => {
         if(err){
             throw err;
         }
-        return res.status(200).json({ code: 0, data: '添加成功!' })
+        return res.status(200).json({ code: 0, des: '添加成功!' })
     })
 }
 
@@ -36,7 +36,7 @@ const bannerGoodsDelete = (req, res) => {
         if(err){
             throw err;
         }
-        return res.status(200).json({ code: 0, data: '删除成功!' })
+        return res.status(200).json({ code: 0, des: '删除成功!' })
     })
 }
 
@@ -47,7 +47,7 @@ const bannerGoodsIndex = (req, res) => {
         if(err){
             throw err;
         }
-        return res.status(200).json({ code: 0, data: '排序修改成功!' })
+        return res.status(200).json({ code: 0, des: '排序修改成功!' })
     })
 }
 
