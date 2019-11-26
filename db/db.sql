@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `user_order`(
     `order_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单ID',
     `order_number` varchar(50) NOT NULL DEFAULT '' COMMENT '订单号',
     `user_id` int(11) NOT NULL COMMENT '用户ID',
+    `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '用户昵称',
     `address_id` int(11) NOT NULL COMMENT '地址ID',
     `address_info` varchar(100) DEFAULT '' COMMENT '地址详情信息',
     `order_status` tinyint(10) NOT NULL DEFAULT 1 COMMENT '订单状态(1待付款2待发货3已发货4已完成5已回退)',
@@ -137,6 +138,7 @@ CREATE TABLE IF NOT EXISTS `user_order`(
     `order_exit_time` datetime COMMENT '订单回退时间',
     `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '删除标记0.未删除1.已删除',
     `last_edit_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后操作时间',
+    `last_operate_account` timestamp DEFAULT '' COMMENT '最后操作人账号',
     `comments` varchar(255) DEFAULT '' COMMENT '备注',
     PRIMARY KEY(`order_id`),
     UNIQUE (`order_number`)

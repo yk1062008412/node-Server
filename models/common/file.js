@@ -2,11 +2,10 @@
  * @Author: yk1062008412
  * @Date: 2019-11-18 23:02:10
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-21 22:41:14
+ * @LastEditTime: 2019-11-24 09:53:10
  * @Description: 文件操作
  */
 const my_connection = require('../../config/dbmysql2');
-import { getUserAccount } from '../common/getToken';
 
 // 获取文件信息
 const fileList = (req, res) => {
@@ -21,7 +20,7 @@ const fileList = (req, res) => {
 // 新增文件
 const fileAdd = async (req, res) => {
     // 获取上传文件的管理员名称
-    const user_account = await getUserAccount(req.headers.authorization);
+    const user_account = await getToken.getUserAccount(req.headers.authorization);
     const { fieldname, originalname, encoding, mimetype, destination, filename, path, size} = req.files[0];
     const filetype = (originalname).split('.').pop();
     const addSql = `INSERT INTO file_info (file_size, file_type, file_url,
@@ -49,7 +48,7 @@ const fileEdit = (req, res) => {
 
 // 删除图片文件
 const fileDelete = (req, res) => {
-    const { imgUrlId } = req,body;
+    const { imgUrlId } = req.body;
     my_connection.query('UPDATE file_info SET del_flag=1 WHERE img_url_id=?', [imgUrlId], (err, rows) => {
         if(err){
             throw err;

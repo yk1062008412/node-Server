@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-10-28 22:31:07
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-18 23:28:12
+ * @LastEditTime: 2019-11-24 09:52:54
  * @Description: file content
  */
 const express = require('express');
@@ -16,6 +16,10 @@ const loginRouter = require('./routers/admin/login');
 const categoryRouter = require('./routers/admin/category');
 const goodsRouter = require('./routers/admin/goods');
 const bannerRouter = require('./routers/admin/banner');
+const bannerGoodsRouter = require('./routers/admin/banner_goods');
+const admAccountRouter = require('./routers/admin/adm_account');
+const userRouter = require('./routers/admin/user');
+const orderRouter = require('./routers/admin/order');
 
 const expressJwt = require('express-jwt');
 const vertoken = require('./common/token_verify');
@@ -80,6 +84,10 @@ app.use('/login', loginRouter);
 app.use('/category', categoryRouter);
 app.use('/goods', goodsRouter);
 app.use('/banner', bannerRouter);
+app.use('/bannerGoods', bannerGoodsRouter);
+app.use('/admAccount', admAccountRouter);
+app.use('/user', userRouter);
+app.use('/order', orderRouter);
 
 //当token失效返回提示信息
 app.use(function(err, req, res, next) {
