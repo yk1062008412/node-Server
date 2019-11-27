@@ -2,12 +2,12 @@
  * @Author: yk1062008412
  * @Date: 2019-11-18 23:02:10
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-24 09:53:10
+ * @LastEditTime: 2019-11-27 22:09:13
  * @Description: 文件操作
  */
 const my_connection = require('../../config/dbmysql2');
 
-// 获取文件信息
+// 获取文件列表
 const fileList = (req, res) => {
     my_connection.query('SELECT * FROM file_info WHERE del_flag = 0', [], (err, rows) => {
         if(err){
