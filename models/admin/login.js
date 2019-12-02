@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-10-31 22:08:18
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-27 23:25:57
+ * @LastEditTime: 2019-12-02 22:09:47
  * @Description: 登录信息
  */
 const my_connection = require('../../config/dbmysql2');
@@ -42,7 +42,7 @@ const getMyInfo = async (req, res) => {
         if(err){
             throw err;
         }
-        res.status(200).json({ code: 0, data: rows })
+        res.status(200).json({ code: 0, data: rows[0] })
     })
 }
 
