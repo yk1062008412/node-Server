@@ -2,14 +2,14 @@
  * @Author: yk1062008412
  * @Date: 2019-10-31 22:08:18
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-20 22:57:19
+ * @LastEditTime: 2019-12-03 23:20:14
  * @Description: 商品类目信息
  */
 const my_connection = require('../../config/dbmysql2');
 
 // 获取商品类目列表
 const getCategoryList = (req, res) => {
-    my_connection.query('SELECT * FROM goods_category WHERE del_flag = 0 ORDER BY category_index ASC', [], (err, rows) => {
+    my_connection.query('SELECT * FROM goods_category WHERE del_flag = 0 ORDER BY update_time DESC', [], (err, rows) => {
         if(err){
             throw err;
         }
@@ -24,7 +24,7 @@ const getCategoryDetail = (req, res) => {
         if(err){
             throw err;
         }
-        return res.status(200).json({ code: 0, data: rows})
+        return res.status(200).json({ code: 0, data: rows[0]})
     })
 }
 
@@ -42,7 +42,7 @@ const categoryAdd = (req, res) => {
 // 修改商品类目
 const categoryUpdate = (req, res) => {
     const { categoryName, comments, categoryIndex, categoryStatus, categoryId } = req.body;
-    my_connection.query('UPDATE goods_category SET category_name=?, comments=?, category_index=?, category_status=? WHERE category_id=?)', [categoryName, comments, categoryIndex, categoryStatus, categoryId], (err,rows) => {
+    my_connection.query('UPDATE goods_category SET category_name=?, comments=?, category_index=?, category_status=? WHERE category_id=?', [categoryName, comments, categoryIndex, categoryStatus, categoryId], (err,rows) => {
         if(err){
             throw err;
         }
