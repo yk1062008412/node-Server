@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-10-31 22:08:18
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-12-03 23:20:14
+ * @LastEditTime: 2019-12-04 22:57:14
  * @Description: 商品类目信息
  */
 const my_connection = require('../../config/dbmysql2');
@@ -53,7 +53,7 @@ const categoryUpdate = (req, res) => {
 // 修改商品类目上下架状态
 const categoryPopUp = (req, res) => {
     const { categoryStatus, categoryId } = req.body;
-    my_connection.query('UPDATE goods_category SET category_status=? WHERE category_id=?)', [categoryStatus, categoryId], (err,rows) => {
+    my_connection.query('UPDATE goods_category SET category_status=? WHERE category_id=?', [categoryStatus, categoryId], (err,rows) => {
         if(err){
             throw err;
         }
@@ -64,7 +64,7 @@ const categoryPopUp = (req, res) => {
 // 修改商品类目排序
 const categorySortUpdate = (req, res) => {
     const { categoryIndex, categoryId } = req.body;
-    my_connection.query('UPDATE goods_category SET category_index=? WHERE category_id=?)', [categoryIndex, categoryId], (err,rows) => {
+    my_connection.query('UPDATE goods_category SET category_index=? WHERE category_id=?', [categoryIndex, categoryId], (err,rows) => {
         if(err){
             throw err;
         }
@@ -75,7 +75,7 @@ const categorySortUpdate = (req, res) => {
 // 删除商品类目
 const categoryDelete = (req, res) => {
     const { categoryId } = req.body;
-    my_connection.query('UPDATE goods_category SET del_flag=1 WHERE category_id=?)', [categoryId], (err,rows) => {
+    my_connection.query('UPDATE goods_category SET del_flag=1 WHERE category_id=?', [categoryId], (err,rows) => {
         if(err){
             throw err;
         }
