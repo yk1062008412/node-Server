@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-11-23 22:58:22
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-26 23:17:04
+ * @LastEditTime: 2019-12-05 23:58:51
  * @Description: 订单信息
  */
 const my_connection = require('../../config/dbmysql2');
@@ -17,26 +17,9 @@ const getOrderList = async (req, res) => {
     const pageInfo = func.getLimitData(currentPage || 1, pageSize || 20);
     let selectSql = `SELECT * FROM user_order
         WHERE del_flag=0`;
-    selectSql += func.geneSqlText('order_number', orderNumber)
-        + func.geneSqlText('nickname', nickname, 2)
-        + func.geneSqlText('address_info', addressInfo, 2)
-        + func.geneSqlText('order_status', orderStatus)
-        + func.geneSqlText('pay_mode', payMode)
-        + func.geneSqlText('order_add_time', orderAddTimeStart, 3)
-        + func.geneSqlText('order_add_time', orderAddTimeEnd, 4)
-        + func.geneSqlText('order_pay_time', orderPayTimeStart, 3)
-        + func.geneSqlText('order_pay_time', orderPayTimeEnd, 4)
-        + func.geneSqlText('order_send_time', orderSendTimeStart, 3)
-        + func.geneSqlText('order_send_time', orderSendTimeEnd, 4)
-        + func.geneSqlText('order_complete_time', orderCompleteTimeStart, 3)
-        + func.geneSqlText('order_complete_time', orderCompleteTimeEnd, 4)
-        + func.geneSqlText('order_exit_time', orderExitTimeStart, 3)
-        + func.geneSqlText('order_exit_time', orderExitTimeEnd, 4)
-        + ` ORDER BY last_edit_time ASC LIMIT ?, ?`;
-    
     let countSql = `SELECT count(*) AS count FROM user_order
         WHERE del_flag=0`;
-        countSql += func.geneSqlText('order_number', orderNumber)
+    let commonSql = func.geneSqlText('order_number', orderNumber)
         + func.geneSqlText('nickname', nickname, 2)
         + func.geneSqlText('address_info', addressInfo, 2)
         + func.geneSqlText('order_status', orderStatus)
@@ -55,19 +38,22 @@ const getOrderList = async (req, res) => {
     const resParam = {
         code: 0,
         data: [],
-        count: 0
+        pageInfo: {}
     }
-    const [rows1, fields1] = await connection_promise.query(selectSql, [pageInfo[0], pageInfo[1]]).catch(err => {
+    const [rows1, fields1] = await connection_promise.query(selectSql + commonSql + ' ORDER BY last_edit_time DESC LIMIT ?, ?', [pageInfo[0], pageInfo[1]]).catch(err => {
         throw err;
     })
 
     resParam.data = rows1;
 
-    const [rows2, fields2] = await connection_promise.query(countSql, []).catch(err => {
+    const [rows2, fields2] = await connection_promise.query(countSql + commonSql, []).catch(err => {
         throw err;
     })
-
-    resParam.count = rows2[0]['count'];
+    Object.assign(resParam.pageInfo, {
+        count: rows2[0]['count'],
+        currentPage: currentPage,
+        pageSize: pageSize
+    });
     
     res.status(200).json(resParam);
 }

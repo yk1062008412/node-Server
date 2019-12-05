@@ -2,19 +2,52 @@
  * @Author: yk1062008412
  * @Date: 2019-11-17 17:35:13
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-20 22:57:46
+ * @LastEditTime: 2019-12-06 00:05:11
  * @Description: 商品信息
  */
 const my_connection = require('../../config/dbmysql2');
+const connection_promise = my_connection.promise();
+const func = require('../common/func');
 
 // 获取商品信息列表
-const getGoodsList = (req, res) => {
-    my_connection.query('SELECT * FROM goods_info WHERE del_flag = 0 ORDER BY goods_index ASC', [], (err, rows) => {
-        if(err){
-            throw err;
-        }
-        return res.status(200).json({ code: 0, data: rows})
+const getGoodsList = async (req, res) => {
+    const { goodsName, categoryId, goodsStatus, currentPage, pageSize } = req.body;
+    const pageInfo = func.getLimitData(currentPage || 1, pageSize || 20);
+    let selectSql = `SELECT * FROM goods_info
+        WHERE del_flag=0`;
+    let countSql = `SELECT count(*) AS count FROM goods_info
+        WHERE del_flag=0`;
+    let commonSql = func.geneSqlText('goods_name', goodsName, 2)
+        + func.geneSqlText('category_id', categoryId, 2)
+        + func.geneSqlText('goods_status', goodsStatus, 2);
+    const resParam = {
+        code: 0,
+        data: [],
+        pageInfo: {}
+    }
+    // 获取数据列表
+    const [rows1, fields1] = await connection_promise.query(selectSql + commonSql + ' ORDER BY update_time DESC LIMIT ?, ?', [pageInfo[0], pageInfo[1]]).catch(err => {
+        throw err;
     })
+    resParam.data = rows1;
+    // 获取数据count
+    const [rows2, fields2] = await connection_promise.query(countSql + commonSql, []).catch(err => {
+        throw err;
+    })
+    Object.assign(resParam.pageInfo, {
+        count: rows2[0]['count'],
+        currentPage: currentPage,
+        pageSize: pageSize
+    });
+    
+    res.status(200).json(resParam);
+
+    // my_connection.query('SELECT * FROM goods_info WHERE del_flag = 0 ORDER BY goods_index ASC', [], (err, rows) => {
+    //     if(err){
+    //         throw err;
+    //     }
+    //     return res.status(200).json({ code: 0, data: rows})
+    // })
 }
 
 // 获取商品详情
