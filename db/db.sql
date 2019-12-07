@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `admin_account`(
     `super_adm` tinyint(2) NOT NULL DEFAULT 0 COMMENT '超级管理员 0.否;1.是',
     `add_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
     `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `last_operate_account`varchar(30) COMMENT '最后操作人账号',
+    `last_operate_account` varchar(30) COMMENT '最后操作人账号',
     PRIMARY KEY(`id`),
     UNIQUE (`adm_account`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统账号';
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `user_order`(
     `order_exit_time` datetime COMMENT '订单回退时间',
     `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '删除标记0.未删除1.已删除',
     `last_edit_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后操作时间',
-    `last_operate_account` timestamp DEFAULT '' COMMENT '最后操作人账号',
+    `last_operate_account` varchar(30) COMMENT '最后操作人账号',
     `comments` varchar(255) DEFAULT '' COMMENT '备注',
     PRIMARY KEY(`order_id`),
     UNIQUE (`order_number`)

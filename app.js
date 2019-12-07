@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-10-28 22:31:07
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-27 22:40:09
+ * @LastEditTime: 2019-12-07 21:35:31
  * @Description: file content
  */
 const express = require('express');
@@ -37,6 +37,9 @@ app.all("*",function(req,res,next){
     else
         next();
 });
+
+// 静态资源
+app.use('/uploadFile',express.static('./uploadFile'));
 
 // 验证token是否过期并规定哪些路由不用验证
 app.use(expressJwt({
