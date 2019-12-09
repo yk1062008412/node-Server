@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-10-28 22:31:07
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-12-07 21:35:31
+ * @LastEditTime: 2019-12-09 22:32:11
  * @Description: file content
  */
 const express = require('express');
@@ -33,7 +33,7 @@ app.all("*",function(req,res,next){
     //跨域允许的请求方式 
     res.header("Access-Control-Allow-Methods","DELETE,PUT,POST,GET,OPTIONS");
     if (req.method.toLowerCase() == 'options')
-        res.send(200);  //让options尝试请求快速结束
+        res.sendStatus(200);  //让options尝试请求快速结束
     else
         next();
 });

@@ -2,10 +2,11 @@
  * @Author: yk1062008412
  * @Date: 2019-11-18 23:02:10
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-12-07 21:30:25
+ * @LastEditTime: 2019-12-09 22:19:01
  * @Description: 文件操作
  */
 const my_connection = require('../../config/dbmysql2');
+const getToken = require('../common/getToken');
 
 // 获取文件列表
 const fileList = (req, res) => {
