@@ -48,10 +48,9 @@ CREATE TABLE IF NOT EXISTS `goods_info`(
     `goods_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '商品ID',
     `category_id` int(11) COMMENT '分类ID',
     `goods_name` varchar(50) NOT NULL DEFAULT '' COMMENT '商品名称',
-    `goods_code` varchar(50) NOT NULL DEFAULT '' COMMENT '商品编码',
-    `stock_price` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '商品进价',
-    `cost_price` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '商品原价',
-    `off_price` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '商品折扣价',
+    `stock_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品进价',
+    `cost_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品原价',
+    `off_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品折扣价',
     `goods_desc` varchar(100) DEFAULT '' COMMENT '商品描述',
     `stock` int(11) DEFAULT 0 COMMENT '库存',
     `goods_img_url` varchar(255) DEFAULT '' COMMENT '图片URL',
@@ -62,8 +61,7 @@ CREATE TABLE IF NOT EXISTS `goods_info`(
     `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '状态 0.正常;1.已删除',
     `comments` TEXT COMMENT '商品备注',
-    PRIMARY KEY(`goods_id`),
-    UNIQUE (`goods_code`)
+    PRIMARY KEY(`goods_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品信息';
 -- 商品分类
 CREATE TABLE IF NOT EXISTS `goods_category`(

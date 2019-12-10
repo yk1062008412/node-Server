@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-11-24 00:47:14
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-26 22:45:50
+ * @LastEditTime: 2019-12-10 15:29:04
  * @Description: 公共方法
  */
 
@@ -29,7 +29,8 @@ const geneSqlText = (key, val, type=1) => {
         return ` AND ${key}=${connection.escape(val)}`
       }
       if (type === 2) { // like语句
-        return ` AND ${key} LIKE '%${connection.escape(val)}%'`
+        return ` AND ${key} LIKE "%${val}%"`
+        // return " AND " + key + " LIKE '%" + val + "%'";
       }
       if (type === 3) { // >=语句
         return ` AND ${key} >= ${connection.escape(val)}`

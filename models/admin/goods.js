@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-11-17 17:35:13
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-12-06 00:05:11
+ * @LastEditTime: 2019-12-10 21:28:08
  * @Description: 商品信息
  */
 const my_connection = require('../../config/dbmysql2');
@@ -13,20 +13,30 @@ const func = require('../common/func');
 const getGoodsList = async (req, res) => {
     const { goodsName, categoryId, goodsStatus, currentPage, pageSize } = req.body;
     const pageInfo = func.getLimitData(currentPage || 1, pageSize || 20);
-    let selectSql = `SELECT * FROM goods_info
-        WHERE del_flag=0`;
+    
+    let selectSql = `SELECT
+            a.*, b.category_name
+        FROM
+            goods_info a
+        LEFT JOIN goods_category b ON a.category_id = b.category_id
+        WHERE
+            a.del_flag = 0`;
+    selectSql += goodsName ? ` AND a.goods_name LIKE "%${goodsName}%"` : '';
+    selectSql += categoryId ? ` AND a.category_id = ${categoryId}` : '';
+    selectSql += goodsStatus ? ` AND a.goods_status = ${goodsStatus}` : '';
+
     let countSql = `SELECT count(*) AS count FROM goods_info
         WHERE del_flag=0`;
     let commonSql = func.geneSqlText('goods_name', goodsName, 2)
-        + func.geneSqlText('category_id', categoryId, 2)
-        + func.geneSqlText('goods_status', goodsStatus, 2);
+        + func.geneSqlText('category_id', categoryId)
+        + func.geneSqlText('goods_status', goodsStatus);
     const resParam = {
         code: 0,
         data: [],
         pageInfo: {}
     }
     // 获取数据列表
-    const [rows1, fields1] = await connection_promise.query(selectSql + commonSql + ' ORDER BY update_time DESC LIMIT ?, ?', [pageInfo[0], pageInfo[1]]).catch(err => {
+    const [rows1, fields1] = await connection_promise.query(selectSql + ' ORDER BY update_time DESC LIMIT ?, ?', [pageInfo[0], pageInfo[1]]).catch(err => {
         throw err;
     })
     resParam.data = rows1;
@@ -57,19 +67,19 @@ const getGoodsDetail = (req, res) => {
         if(err){
             throw err;
         }
-        return res.status(200).json({ code: 0, data: rows})
+        return res.status(200).json({ code: 0, data: rows[0]})
     })
 }
 
 // 新增商品信息
 const goodsAdd = (req, res) => {
-    const { categoryId, goodsName, goodsCode, stockPrice, costPrice, offPrice, goodsDesc,
+    const { categoryId, goodsName, stockPrice, costPrice, offPrice, goodsDesc,
         stock, goodsImgUrl, imgUrlId, goodsIndex, goodsStatus, comments } = req.body;
     const addSql = `INSERT INTO goods_info (
-        category_id, goods_name, goods_code, stock_price, cost_price, off_price, goods_desc,
+        category_id, goods_name, stock_price, cost_price, off_price, goods_desc,
         stock, goods_img_url, img_url_id, goods_index, goods_status, comments) values (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    my_connection.query(addSql, [categoryId, goodsName, goodsCode, stockPrice, costPrice, offPrice,
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    my_connection.query(addSql, [categoryId, goodsName, stockPrice || null, costPrice || null, offPrice || null,
         goodsDesc, stock, goodsImgUrl, imgUrlId, goodsIndex, goodsStatus, comments], (err, rows) => {
         if(err){
             throw err;
@@ -84,9 +94,10 @@ const goodsUpdate = (req, res) => {
         goodsImgUrl, imgUrlId, goodsIndex, goodsStatus, comments } = req.body;
     const updateSql = `UPDATE goods_info SET category_id=?, goods_name=?, stock_price=?, cost_price=?, off_price=?,
         goods_desc=?, stock=?, goods_img_url=?, img_url_id=?, goods_index=?, goods_status=?, comments=? WHERE goods_id=?`
-    my_connection.query(updateSql, [categoryId, goodsName, stockPrice, costPrice, offPrice, goodsDesc, stock,
+    const con = my_connection.query(updateSql, [categoryId, goodsName, stockPrice || null, costPrice || null, offPrice || null, goodsDesc, stock,
         goodsImgUrl, imgUrlId, goodsIndex, goodsStatus, comments, goodsId], (err, rows) => {
-        if(err){
+            console.log(con.sql);
+            if(err){
             throw err;
         }
         return res.status(200).json({ code: 0, des: '更新成功' })
@@ -107,7 +118,7 @@ const goodsPopUp = (req, res) => {
 // 修改商品类目排序
 const goodsSortUpdate = (req, res) => {
     const { goodsIndex, goodsId } = req.body;
-    my_connection.query('UPDATE goods_info SET goods_index=? WHERE goods_id=?)', [goodsIndex, goodsId], (err,rows) => {
+    my_connection.query('UPDATE goods_info SET goods_index=? WHERE goods_id=?', [goodsIndex, goodsId], (err,rows) => {
         if(err){
             throw err;
         }
@@ -118,7 +129,7 @@ const goodsSortUpdate = (req, res) => {
 // 删除商品
 const goodsDelete = (req, res) => {
     const { goodsId } = req.body;
-    my_connection.query('UPDATE goods_info SET del_flag=1 WHERE goods_id=?)', [goodsId], (err,rows) => {
+    my_connection.query('UPDATE goods_info SET del_flag=1 WHERE goods_id=?', [goodsId], (err,rows) => {
         if(err){
             throw err;
         }

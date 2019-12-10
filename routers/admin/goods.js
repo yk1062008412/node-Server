@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2019-11-17 17:35:24
  * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-17 17:42:28
+ * @LastEditTime: 2019-12-10 16:01:03
  * @Description: 商品信息
  */
 const express = require('express');
@@ -16,7 +16,7 @@ router.post('/getGoodsList', function(req, res){
 
 // 获取商品详情
 router.post('/getGoodsDetail', function(req, res){
-    goodsModel.getGoodsList(req, res);
+    goodsModel.getGoodsDetail(req, res);
 })
 
 // 新增商品信息
