@@ -42,7 +42,7 @@ app.all("*",function(req,res,next){
 app.use(expressJwt({
 	secret: 'mes_qdhd_mobile_xhykjyxgs'
 }).unless({
-	path: ['/login/loginSystem']//除了这个地址，其他的URL都需要验证
+	path: ['/api/login/loginSystem']//除了这个地址，其他的URL都需要验证
 }));
 
 // token获取
@@ -78,16 +78,16 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/file', fileRouter);
-app.use('/test', testRouter);
-app.use('/login', loginRouter);
-app.use('/category', categoryRouter);
-app.use('/goods', goodsRouter);
-app.use('/banner', bannerRouter);
-app.use('/bannerGoods', bannerGoodsRouter);
-app.use('/admAccount', admAccountRouter);
-app.use('/user', userRouter);
-app.use('/order', orderRouter);
+app.use('/api/file', fileRouter);
+app.use('/api/test', testRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/category', categoryRouter);
+app.use('/api/goods', goodsRouter);
+app.use('/api/banner', bannerRouter);
+app.use('/api/bannerGoods', bannerGoodsRouter);
+app.use('/api/admAccount', admAccountRouter);
+app.use('/api/user', userRouter);
+app.use('/api/order', orderRouter);
 
 //当token失效返回提示信息
 app.use(function(err, req, res, next) {
