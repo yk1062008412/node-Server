@@ -15,7 +15,7 @@ const getOrderList = async (req, res) => {
         orderPayTimeStart, orderPayTimeEnd, orderSendTimeStart, orderSendTimeEnd, orderCompleteTimeStart,
         orderCompleteTimeEnd, orderExitTimeStart, orderExitTimeEnd, currentPage, pageSize } = req.body;
     const pageInfo = func.getLimitData(currentPage || 1, pageSize || 20);
-    let selectSql = `SELECT * FROM user_order
+    let selectSql = `SELECT uo.*, oi.* FROM user_order uo INNER JOIN order_info oi ON uo.order_id = oi.order_id
         WHERE del_flag=0`;
     let countSql = `SELECT count(*) AS count FROM user_order
         WHERE del_flag=0`;
