@@ -2,14 +2,14 @@
  * @Author: yk1062008412
  * @Date: 2019-10-28 22:31:07
  * @LastEditors  : yk1062008412
- * @LastEditTime : 2019-12-30 23:01:40
+ * @LastEditTime : 2020-01-01 13:20:09
  * @Description: file content
  */
 const express = require('express');
 const app = express();
 const session = require('express-session');
 const bodyParser = require('body-parser');
-
+// 后台管理系统
 const fileRouter = require('./routers/common/file_upload');
 const testRouter = require('./routers/test');
 const loginRouter = require('./routers/admin/login');
@@ -20,8 +20,10 @@ const bannerGoodsRouter = require('./routers/admin/banner_goods');
 const admAccountRouter = require('./routers/admin/adm_account');
 const userRouter = require('./routers/admin/user');
 const orderRouter = require('./routers/admin/order');
-
+// 小程序支付
 const payRouter = require('./routers/common/weapp_pay');
+// 用户侧系统
+const homeRouter = require('./routers/user/home');
 
 const expressJwt = require('express-jwt');
 const vertoken = require('./common/token_verify');
@@ -47,7 +49,7 @@ app.use('/uploadFile',express.static('./uploadFile'));
 app.use(expressJwt({
 	secret: 'mes_qdhd_mobile_xhykjyxgs'
 }).unless({
-	path: ['/api/login/loginSystem']//除了这个地址，其他的URL都需要验证
+    path: ['/api/login/loginSystem', /^\/user\/.*/ ] //除了这个地址，其他的URL都需要验证
 }));
 
 // token获取
@@ -95,6 +97,8 @@ app.use('/api/user', userRouter);
 app.use('/api/order', orderRouter);
 // 支付
 app.use('/user/pay', payRouter);
+// 用户侧
+app.use('/user/home', homeRouter);
 
 //当token失效返回提示信息
 app.use(function(err, req, res, next) {

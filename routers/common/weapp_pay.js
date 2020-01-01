@@ -2,23 +2,24 @@
  * @Author: yk1062008412
  * @Date: 2019-12-30 23:01:19
  * @LastEditors  : yk1062008412
- * @LastEditTime : 2019-12-31 00:29:19
+ * @LastEditTime : 2020-01-01 12:52:13
  * @Description: 小程序支付
  */
 const express = require('express');
 const router = express.Router();
 const request = require('request');
 const prePay = require('./prepay');
+const weappConf = require('../../config/weapp');
 
 // 统一下单
 router.post('/paySign', (req, res) => {
-  const appId = 'wx18275049303f7e2f'
+  const appId = weappConf.appId
   // 商户号
-  const mchId = '1412578202'
+  const mchId = weappConf.mchId
 
-  const notifyUrl = '12312321'
+  const notifyUrl = weappConf.notifyUrl
   // attach 是一个任意的字符串, 会原样返回, 可以用作一个标记
-  const attach = 'thisisaanyparam'
+  const attach = weappConf.attach
   // 一个随机字符串
   const nonceStr = prePay.getNonceStr()
   // 用户的 openId
@@ -38,11 +39,10 @@ router.post('/paySign', (req, res) => {
   const sendData = prePay.wxSendData(appId, attach, productIntro, mchId, nonceStr, notifyUrl, openId, tradeId, ip, price, sign)
   console.log(sendData);
   request({
-    url: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
+    url: weappConf.payUrl,
     method: 'POST',
     body: sendData
   }, function(error, response, body){
-    console.log('2')
     if(error){
       console.log(error)
     }else{
