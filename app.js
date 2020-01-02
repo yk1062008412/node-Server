@@ -1,8 +1,8 @@
 /*
  * @Author: yk1062008412
  * @Date: 2019-10-28 22:31:07
- * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-01 13:20:09
+ * @LastEditors  : carkang.yang@qunar.com
+ * @LastEditTime : 2020-01-02 16:30:47
  * @Description: file content
  */
 const express = require('express');
@@ -24,6 +24,8 @@ const orderRouter = require('./routers/admin/order');
 const payRouter = require('./routers/common/weapp_pay');
 // 用户侧系统
 const homeRouter = require('./routers/user/home');
+const mineRouter = require('./routers/user/mine');
+const addressRouter = require('./routers/user/address');
 
 const expressJwt = require('express-jwt');
 const vertoken = require('./common/token_verify');
@@ -99,6 +101,8 @@ app.use('/api/order', orderRouter);
 app.use('/user/pay', payRouter);
 // 用户侧
 app.use('/user/home', homeRouter);
+app.use('/user/mine', mineRouter);
+app.use('/user/address', addressRouter);
 
 //当token失效返回提示信息
 app.use(function(err, req, res, next) {

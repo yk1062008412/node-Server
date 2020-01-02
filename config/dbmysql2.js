@@ -6,7 +6,7 @@ const mysql = require('mysql2');
 module.exports = mysql.createPool({
     host: "127.0.0.1",
     user: "root",
-    password: "",
+    password: "123456",
     database: "my_store",
     port: "3306",
     charset: "utf8", // Default database encode
