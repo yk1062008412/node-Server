@@ -1,3 +1,10 @@
+/*
+ * @Author: yk1062008412
+ * @Date: 2020-01-02 22:05:17
+ * @LastEditors: yk1062008412
+ * @LastEditTime: 2020-01-05 12:37:55
+ * @Description: file content
+ */
 const mysql = require('mysql2');
 
 /**
@@ -6,7 +13,7 @@ const mysql = require('mysql2');
 module.exports = mysql.createPool({
     host: "127.0.0.1",
     user: "root",
-    password: "123456",
+    password: "",
     database: "my_store",
     port: "3306",
     charset: "utf8", // Default database encode
