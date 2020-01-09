@@ -1,8 +1,8 @@
 /*
  * @Author: yk1062008412
  * @Date: 2019-11-21 22:33:37
- * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-27 23:25:48
+ * @LastEditors  : carkang.yang@qunar.com
+ * @LastEditTime : 2020-01-09 16:33:21
  * @Description: 获取token信息
  */
 const tokenVerify = require('../../common/token_verify');
@@ -12,12 +12,8 @@ const getUserAccount = async (token) => {
     if(!token) return;
     // const res = await tokenVerify.verifyToken(token);
     // return res.user_account || 'UnKnow';
-    let user_account = 'unKnown'
-    await tokenVerify.verifyToken(token).then(data => {
-        user_account = data.user_account;
-        return user_account;
-    })
-
+    const res = await tokenVerify.verifyToken(token);
+    return res.user_account || 'UnKnow';
 }
 
 // 获取用户ID
