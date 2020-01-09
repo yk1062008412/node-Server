@@ -1,8 +1,8 @@
 /*
  * @Author: yk1062008412
  * @Date: 2019-10-28 22:31:07
- * @LastEditors  : carkang.yang@qunar.com
- * @LastEditTime : 2020-01-02 16:30:47
+ * @LastEditors  : yk1062008412
+ * @LastEditTime : 2020-01-04 22:53:19
  * @Description: file content
  */
 const express = require('express');
@@ -26,6 +26,9 @@ const payRouter = require('./routers/common/weapp_pay');
 const homeRouter = require('./routers/user/home');
 const mineRouter = require('./routers/user/mine');
 const addressRouter = require('./routers/user/address');
+const uOrderRouter = require('./routers/user/order');
+// 微信H5支付
+// const h5Router = require('./routers/common/h5app_pay');
 
 const expressJwt = require('express-jwt');
 const vertoken = require('./common/token_verify');
@@ -103,6 +106,9 @@ app.use('/user/pay', payRouter);
 app.use('/user/home', homeRouter);
 app.use('/user/mine', mineRouter);
 app.use('/user/address', addressRouter);
+app.use('/user/order', uOrderRouter);
+// H5支付
+// app.use('/user/h5pay', h5Router);
 
 //当token失效返回提示信息
 app.use(function(err, req, res, next) {

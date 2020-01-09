@@ -1,8 +1,8 @@
 /*
  * @Author: yk1062008412
  * @Date: 2019-11-17 20:41:29
- * @LastEditors: yk1062008412
- * @LastEditTime: 2019-11-20 22:56:21
+ * @LastEditors  : yk1062008412
+ * @LastEditTime : 2020-01-05 16:08:42
  * @Description: banner轮播图
  */
 const my_connection = require('../../config/dbmysql2');
@@ -14,6 +14,17 @@ const getBannerList = (req, res) => {
             throw err;
         }
         return res.status(200).json({ code: 0, data: rows})
+    })
+}
+
+// 获取banner图信息
+const getBannerInfo = (req, res) => {
+    const { bannerId } = req.body;
+    my_connection.query('SELECT * FROM banner_info WHERE banner_id = ?', [bannerId], (err, rows) => {
+        if(err){
+            throw err;
+        }
+        return res.status(200).json({ code: 0, data: rows[0]})
     })
 }
 
@@ -82,6 +93,7 @@ const bannerDelete = (req, res) => {
 
 module.exports = {
     getBannerList,
+    getBannerInfo,
     bannerAdd,
     bannerUpdate,
     bannerSortUpdate,
