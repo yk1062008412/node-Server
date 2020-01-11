@@ -1,8 +1,8 @@
 /*
  * @Author: yk1062008412
  * @Date: 2019-11-17 17:35:13
- * @LastEditors: yk1062008412
- * @LastEditTime: 2019-12-10 21:28:08
+ * @LastEditors  : yk1062008412
+ * @LastEditTime : 2020-01-11 21:53:46
  * @Description: 商品信息
  */
 const my_connection = require('../../config/dbmysql2');
@@ -77,7 +77,7 @@ const goodsAdd = (req, res) => {
         stock, goodsImgUrl, imgUrlId, goodsIndex, goodsStatus, comments } = req.body;
     const addSql = `INSERT INTO goods_info (
         category_id, goods_name, stock_price, cost_price, off_price, goods_desc,
-        stock, goods_img_url, img_url_id, goods_index, goods_status, comments) values (
+        stock, goods_img_url, img_url_id, goods_index, goods_status, comments) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     my_connection.query(addSql, [categoryId, goodsName, stockPrice || null, costPrice || null, offPrice || null,
         goodsDesc, stock, goodsImgUrl, imgUrlId, goodsIndex, goodsStatus, comments], (err, rows) => {
@@ -96,7 +96,6 @@ const goodsUpdate = (req, res) => {
         goods_desc=?, stock=?, goods_img_url=?, img_url_id=?, goods_index=?, goods_status=?, comments=? WHERE goods_id=?`
     const con = my_connection.query(updateSql, [categoryId, goodsName, stockPrice || null, costPrice || null, offPrice || null, goodsDesc, stock,
         goodsImgUrl, imgUrlId, goodsIndex, goodsStatus, comments, goodsId], (err, rows) => {
-            console.log(con.sql);
             if(err){
             throw err;
         }
