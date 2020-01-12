@@ -1,8 +1,8 @@
 /*
  * @Author: yk1062008412
  * @Date: 2020-01-02 16:28:57
- * @LastEditors  : carkang.yang@qunar.com
- * @LastEditTime : 2020-01-02 16:49:55
+ * @LastEditors  : yk1062008412
+ * @LastEditTime : 2020-01-12 21:30:07
  * @Description: address 地址
  */
 const express = require('express');
@@ -22,6 +22,21 @@ router.post('/getDefaultAddress', function(req, res){
 // 新增地址
 router.post('/addressAdd', function(req, res){
   addressModel.addressAdd(req, res);
+})
+
+// 获取地址详情
+router.post('/getAddressInfo', function(req, res){
+  addressModel.getAddressInfo(req, res);
+})
+
+// 更新地址信息
+router.post('/addressUpdate', function(req, res){
+  addressModel.addressUpdate(req, res);
+})
+
+// 删除地址
+router.post('/addressDelete', function(req, res){
+  addressModel.addressDelete(req, res);
 })
 
 module.exports = router;

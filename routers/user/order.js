@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2020-01-02 16:22:07
  * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-11 20:06:35
+ * @LastEditTime : 2020-01-12 11:13:25
  * @Description: mine 我的
  */
 const express = require('express');
@@ -13,6 +13,11 @@ const orderModel = require('../../models/user/order');
 // 用户下单
 router.post('/saveOrder', function(req, res){
   orderModel.saveOrder(req, res)
+})
+
+// 查询订单详情
+router.post('/orderDetail', function(req, res){
+  orderModel.orderDetail(req, res)
 })
 
 // 提交订单

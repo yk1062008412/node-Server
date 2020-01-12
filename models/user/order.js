@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2020-01-04 17:58:32
  * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-11 22:57:35
+ * @LastEditTime : 2020-01-12 17:16:48
  * @Description: order 订单模块
  */
 
@@ -80,6 +80,34 @@ const saveOrder = async (req, res) => {
   }})
 }
 
+// 查询订单
+const orderDetail = async (req, res) => {
+  const { orderId } = req.body;
+  const resData = {}
+  // 查询订单详情
+  let selOrderSql = 'SELECT * FROM user_order WHERE order_id=?';
+  const [orderrows, orderfields] = await connection_promise.query(selOrderSql, [orderId]).catch(err => {
+    throw err;
+  })
+  Object.assign(resData, {...orderrows[0]})
+  // 查询订单对应的地址信息
+  if(orderrows[0].address_id){
+    let addressSql = 'SELECT receive_user_name, tel_phone FROM user_address WHERE address_id=?';
+    const [addressrows, addressfields] = await connection_promise.query(addressSql, [orderrows[0].address_id]).catch(addresserr => {
+      throw addresserr;
+    })
+    Object.assign(resData, {...addressrows[0]});
+  }
+  // 查询订单内的商品详情
+  let selGoodsSql = 'SELECT * FROM order_info WHERE order_id=?'
+  const [goodsrows, goodsfields] = await connection_promise.query(selGoodsSql, [orderId]).catch(goodserr => {
+    throw goodserr;
+  })
+  Object.assign(resData,{ goodsList: goodsrows})
+  // 返回res
+  res.status(200).json({code: 0, data: resData})
+}
+
 const submitOrder = (req, res) => {
   // my_connection.query('SELECT * FROM banner_info WHERE del_flag = 0 AND banner_status = 1 ORDER BY banner_index ASC', [], (err, rows) => {
   //   if (err) {
@@ -105,5 +133,6 @@ const submitOrder = (req, res) => {
 }
 module.exports = {
   saveOrder,
+  orderDetail,
   submitOrder
 }
