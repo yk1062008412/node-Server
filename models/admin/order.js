@@ -1,8 +1,8 @@
 /*
  * @Author: yk1062008412
  * @Date: 2019-11-23 22:58:22
- * @LastEditors  : carkang.yang@qunar.com
- * @LastEditTime : 2020-01-09 17:17:13
+ * @LastEditors  : yk1062008412
+ * @LastEditTime : 2020-01-14 00:08:55
  * @Description: 订单信息
  */
 const my_connection = require('../../config/dbmysql2');

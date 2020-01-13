@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2020-01-04 17:58:32
  * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-12 17:16:48
+ * @LastEditTime : 2020-01-14 00:36:18
  * @Description: order 订单模块
  */
 
@@ -85,19 +85,11 @@ const orderDetail = async (req, res) => {
   const { orderId } = req.body;
   const resData = {}
   // 查询订单详情
-  let selOrderSql = 'SELECT * FROM user_order WHERE order_id=?';
+  let selOrderSql = 'SELECT uo.*, ua.receive_user_name, ua.tel_phone FROM user_order AS uo LEFT JOIN user_address AS ua ON uo.address_id = ua.address_id WHERE uo.del_flag=0 AND uo.order_id=?';
   const [orderrows, orderfields] = await connection_promise.query(selOrderSql, [orderId]).catch(err => {
     throw err;
   })
   Object.assign(resData, {...orderrows[0]})
-  // 查询订单对应的地址信息
-  if(orderrows[0].address_id){
-    let addressSql = 'SELECT receive_user_name, tel_phone FROM user_address WHERE address_id=?';
-    const [addressrows, addressfields] = await connection_promise.query(addressSql, [orderrows[0].address_id]).catch(addresserr => {
-      throw addresserr;
-    })
-    Object.assign(resData, {...addressrows[0]});
-  }
   // 查询订单内的商品详情
   let selGoodsSql = 'SELECT * FROM order_info WHERE order_id=?'
   const [goodsrows, goodsfields] = await connection_promise.query(selGoodsSql, [orderId]).catch(goodserr => {
@@ -108,28 +100,40 @@ const orderDetail = async (req, res) => {
   res.status(200).json({code: 0, data: resData})
 }
 
-const submitOrder = (req, res) => {
+// 提交订单并结算
+const submitOrder = async (req, res) => {
   // my_connection.query('SELECT * FROM banner_info WHERE del_flag = 0 AND banner_status = 1 ORDER BY banner_index ASC', [], (err, rows) => {
   //   if (err) {
   //     throw err;
   //   }
   //   return res.status(200).json({ code: 0, data: rows })
   // })
-  const param = {
-    nonce_str: h5Pay.getRandomStr(31),
-    order_desc: '订单描述',
-    order_id: '20200104224744',
-    order_amount: 1,
-    user_ip: '127.0.0.1',
-    openId: 'oOQfL04S5ULpajvFK88shWTR9QO8'
-  }
-  // 订单落库成功
-  h5Pay.unifiedOrder({...param}).then(body => {
-    // console.log(res)
-    return res.status(200).json({code: 0, body: body})
-  }).catch(err => {
-    console.log(err)
+  // 
+  const {order_id, address_id, address_info, book_time, comments} = req.body;
+  // 更新订单信息
+  let updateSql = 'UPDATE user_order SET address_id=?, address_info=?, book_time=?, comments=? WHERE order_id=?';
+  const [uprows, upfields] = await connection_promise.query(updateSql,[address_id, address_info, book_time, comments, order_id]).catch(uperr => {
+    if(uperr) {
+      throw uperr
+    }
   })
+  return res.status(200).json({code: 0, data: '更新成功'})
+  // 开始下单
+  // const param = {
+  //   nonce_str: h5Pay.getRandomStr(31),
+  //   order_desc: '订单描述',
+  //   order_id: '20200104224744',
+  //   order_amount: 1,
+  //   user_ip: '127.0.0.1',
+  //   openId: 'oOQfL04S5ULpajvFK88shWTR9QO8'
+  // }
+  // // 订单落库成功
+  // h5Pay.unifiedOrder({...param}).then(body => {
+  //   // console.log(res)
+  //   return res.status(200).json({code: 0, body: body})
+  // }).catch(err => {
+  //   console.log(err)
+  // })
 }
 module.exports = {
   saveOrder,
