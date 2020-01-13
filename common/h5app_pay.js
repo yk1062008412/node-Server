@@ -1,13 +1,13 @@
 /*
  * @Author: yk1062008412
  * @Date: 2020-01-04 16:59:38
- * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-04 23:16:55
+ * @LastEditors  : carkang.yang@qunar.com
+ * @LastEditTime : 2020-01-13 13:12:32
  * @Description: h5 支付
  */
 
 const request = require('request');
-const parser = require('xml2json');
+const json2xml = require('json2xml');
 const crypto = require('crypto');
 const h5Conf = require('../config/h5app');
 
@@ -44,12 +44,8 @@ exports.unifiedOrder = function({nonce_str, order_desc, order_id, order_amount, 
     request({
       url: notifyUrl,
       method: 'POST',
-      body: parser.toXml(param)
+      body: json2xml(param)
     }, function(err, response, body){
-      // console.log(response)
-      // resolve(response, body)
-      // console.log(response)
-      // console.log(body)
       // if(!err && response.statusCode === 200){
         resolve(body)
       //   resolve(body)
