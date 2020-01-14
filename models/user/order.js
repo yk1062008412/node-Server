@@ -2,13 +2,14 @@
  * @Author: yk1062008412
  * @Date: 2020-01-04 17:58:32
  * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-14 00:36:18
+ * @LastEditTime : 2020-01-15 00:21:38
  * @Description: order 订单模块
  */
 
 const my_connection = require('../../config/dbmysql2');
 const connection_promise = my_connection.promise();
 const h5Pay = require('../../common/h5app_pay')
+const func = require('../common/func');
 
 // 计算价格
 const calcPrice = list => {
@@ -83,7 +84,6 @@ const saveOrder = async (req, res) => {
 // 查询订单
 const orderDetail = async (req, res) => {
   const { orderId } = req.body;
-  const resData = {}
   // 查询订单详情
   let selOrderSql = 'SELECT uo.*, ua.receive_user_name, ua.tel_phone FROM user_order AS uo LEFT JOIN user_address AS ua ON uo.address_id = ua.address_id WHERE uo.del_flag=0 AND uo.order_id=?';
   const [orderrows, orderfields] = await connection_promise.query(selOrderSql, [orderId]).catch(err => {
@@ -135,8 +135,58 @@ const submitOrder = async (req, res) => {
   //   console.log(err)
   // })
 }
+
+// 查询用户的所有订单
+const orderAllDetail = async (req, res) => {
+  const { openId, orderStatus, currentPage, pageSize } = req.body;
+  const resParam = {
+    code: 0,
+    data: [],
+    pageInfo: {}
+  }
+  const pageLimit= func.getLimitData(currentPage || 1, pageSize || 10);
+
+  // 查询订单详情
+  let selOrderSql = 'SELECT uo.*, ua.receive_user_name, ua.tel_phone FROM user_order AS uo LEFT JOIN user_address AS ua ON uo.address_id = ua.address_id WHERE uo.del_flag=0 AND uo.openid=?';
+  let countSql = `SELECT count(*) AS count FROM user_order AS uo LEFT JOIN user_address AS ua ON uo.address_id = ua.address_id WHERE uo.del_flag=0 AND uo.openid=?`;
+  let commonSql = (+orderStatus === 0) ? '' : ` AND order_status=${my_connection.escape(orderStatus)}`
+  // 查询count
+  const [countrows, countfields] = await connection_promise.query(countSql + commonSql, [openId]).catch(err => {
+    console.log(countfields)
+    throw err;
+  })
+  Object.assign(resParam.pageInfo, {
+      count: countrows[0]['count'],
+      currentPage: currentPage,
+      pageSize: pageSize
+  });
+  // 如果count是0，则直接return
+  if(resParam.pageInfo.count === 0){
+    return res.status(200).json(resParam);
+  }
+  // 查询订单列表
+  const [orderrows, orderfields] = await connection_promise.query(selOrderSql + commonSql + ' ORDER BY uo.last_edit_time DESC LIMIT ?, ?', [openId, pageLimit[0], pageLimit[1]]).catch(ordererr => {
+    throw ordererr;
+  })
+  console.log(orderrows.sql);
+  // 查询订单内的商品详情
+  for(let i = 0; i < orderrows.length; i++){
+    const [goodsrows, goodsfields] = await connection_promise.query('SELECT * FROM order_info WHERE order_id = ?', [orderrows[i].order_id]).catch(goodserr => {
+      console.log(goodsfields)
+      throw goodserr;
+    })
+    Object.assign(orderrows[i],{ goodsList: goodsrows.length ? goodsrows : []})
+  }
+  resParam.data = orderrows;
+  // 返回res
+  res.status(200).json(resParam)
+}
+
+
+
 module.exports = {
   saveOrder,
   orderDetail,
-  submitOrder
+  submitOrder,
+  orderAllDetail
 }
