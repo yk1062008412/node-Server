@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2020-01-02 16:22:07
  * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-14 23:18:43
+ * @LastEditTime : 2020-01-15 22:42:13
  * @Description: mine 我的
  */
 const express = require('express');
@@ -28,6 +28,11 @@ router.post('/submitOrder', function(req, res){
 // 查询用户的所有订单
 router.post('/orderAllDetail', function(req, res){
   orderModel.orderAllDetail(req, res)
+})
+
+// 用户取消订单
+router.post('/cancelOrder', function(req, res){
+  orderModel.cancelOrder(req, res)
 })
 
 // 微信支付结果通知的回调地址

@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2020-01-04 17:58:32
  * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-15 00:21:38
+ * @LastEditTime : 2020-01-15 21:49:48
  * @Description: order 订单模块
  */
 
@@ -84,6 +84,7 @@ const saveOrder = async (req, res) => {
 // 查询订单
 const orderDetail = async (req, res) => {
   const { orderId } = req.body;
+  const resData = {}
   // 查询订单详情
   let selOrderSql = 'SELECT uo.*, ua.receive_user_name, ua.tel_phone FROM user_order AS uo LEFT JOIN user_address AS ua ON uo.address_id = ua.address_id WHERE uo.del_flag=0 AND uo.order_id=?';
   const [orderrows, orderfields] = await connection_promise.query(selOrderSql, [orderId]).catch(err => {
@@ -152,13 +153,12 @@ const orderAllDetail = async (req, res) => {
   let commonSql = (+orderStatus === 0) ? '' : ` AND order_status=${my_connection.escape(orderStatus)}`
   // 查询count
   const [countrows, countfields] = await connection_promise.query(countSql + commonSql, [openId]).catch(err => {
-    console.log(countfields)
     throw err;
   })
   Object.assign(resParam.pageInfo, {
-      count: countrows[0]['count'],
-      currentPage: currentPage,
-      pageSize: pageSize
+      count: +countrows[0]['count'],
+      currentPage: +currentPage,
+      pageSize: +pageSize
   });
   // 如果count是0，则直接return
   if(resParam.pageInfo.count === 0){
@@ -168,11 +168,9 @@ const orderAllDetail = async (req, res) => {
   const [orderrows, orderfields] = await connection_promise.query(selOrderSql + commonSql + ' ORDER BY uo.last_edit_time DESC LIMIT ?, ?', [openId, pageLimit[0], pageLimit[1]]).catch(ordererr => {
     throw ordererr;
   })
-  console.log(orderrows.sql);
   // 查询订单内的商品详情
   for(let i = 0; i < orderrows.length; i++){
     const [goodsrows, goodsfields] = await connection_promise.query('SELECT * FROM order_info WHERE order_id = ?', [orderrows[i].order_id]).catch(goodserr => {
-      console.log(goodsfields)
       throw goodserr;
     })
     Object.assign(orderrows[i],{ goodsList: goodsrows.length ? goodsrows : []})
@@ -182,11 +180,22 @@ const orderAllDetail = async (req, res) => {
   res.status(200).json(resParam)
 }
 
-
+// 用户取消订单
+const cancelOrder = async (req, res) => {
+  const { orderId } = req.body;
+  const now = new Date()
+  my_connection.query('UPDATE user_order SET order_status=5, last_operate_account="用户操作", order_exit_time=? WHERE order_id=?', [now, orderId], (err, rows) => {
+    if(err) {
+      throw err;
+    }
+    return res.status(200).json({ code: 0, des: '订单取消成功' })
+  })
+}
 
 module.exports = {
   saveOrder,
   orderDetail,
   submitOrder,
-  orderAllDetail
+  orderAllDetail,
+  cancelOrder
 }
