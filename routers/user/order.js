@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2020-01-02 16:22:07
  * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-15 22:42:13
+ * @LastEditTime : 2020-01-16 23:17:25
  * @Description: mine 我的
  */
 const express = require('express');
@@ -37,7 +37,7 @@ router.post('/cancelOrder', function(req, res){
 
 // 微信支付结果通知的回调地址
 router.post('/orderPoster', (req, res) => {
-  console.log(req);
+  // console.log(req);
   console.log('调用了');
   res.status(200);
 })

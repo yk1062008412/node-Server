@@ -2,7 +2,7 @@
  * @Author: yk1062008412
  * @Date: 2020-01-04 17:58:32
  * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-15 21:49:48
+ * @LastEditTime : 2020-01-16 23:11:18
  * @Description: order 订单模块
  */
 
@@ -103,14 +103,8 @@ const orderDetail = async (req, res) => {
 
 // 提交订单并结算
 const submitOrder = async (req, res) => {
-  // my_connection.query('SELECT * FROM banner_info WHERE del_flag = 0 AND banner_status = 1 ORDER BY banner_index ASC', [], (err, rows) => {
-  //   if (err) {
-  //     throw err;
-  //   }
-  //   return res.status(200).json({ code: 0, data: rows })
-  // })
-  // 
   const {order_id, address_id, address_info, book_time, comments} = req.body;
+  console.log('1')
   // 更新订单信息
   let updateSql = 'UPDATE user_order SET address_id=?, address_info=?, book_time=?, comments=? WHERE order_id=?';
   const [uprows, upfields] = await connection_promise.query(updateSql,[address_id, address_info, book_time, comments, order_id]).catch(uperr => {
@@ -118,23 +112,37 @@ const submitOrder = async (req, res) => {
       throw uperr
     }
   })
-  return res.status(200).json({code: 0, data: '更新成功'})
+  console.log('2')
+  const [getrows, getfields] = await connection_promise.query('SELECT * FROM user_order WHERE order_id=?', [order_id]).catch(geterr => {
+    if(geterr) {
+      throw geterr
+    }
+  })
+  console.log('3')
+  const orderInfo = getrows[0]
+  const userIp = (req.ip.match(/\d+\.\d+\.\d+\.\d+/))[0]
+
+  // return res.status(200).json({code: 0, data: '更新成功', userip: userIp})
+
   // 开始下单
-  // const param = {
-  //   nonce_str: h5Pay.getRandomStr(31),
-  //   order_desc: '订单描述',
-  //   order_id: '20200104224744',
-  //   order_amount: 1,
-  //   user_ip: '127.0.0.1',
-  //   openId: 'oOQfL04S5ULpajvFK88shWTR9QO8'
-  // }
+  const param = {
+    nonce_str: h5Pay.getRandomStr(31),
+    order_desc: '小二配齐',
+    order_id: orderInfo.order_number,
+    order_amount: orderInfo.order_amount * 100,
+    user_ip: userIp,
+    openId: orderInfo.openId
+  }
+  console.log('4')
   // // 订单落库成功
-  // h5Pay.unifiedOrder({...param}).then(body => {
-  //   // console.log(res)
-  //   return res.status(200).json({code: 0, body: body})
-  // }).catch(err => {
-  //   console.log(err)
-  // })
+  h5Pay.unifiedOrder({...param}).then(payres => {
+    // console.log(res)
+    console.log('10')
+    return res.status(200).json({code: 0, body: payres})
+  }).catch(err => {
+    console.log('11')
+    console.log(err)
+  })
 }
 
 // 查询用户的所有订单

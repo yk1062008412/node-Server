@@ -1,8 +1,8 @@
 /*
  * @Author: yk1062008412
  * @Date: 2020-01-04 16:59:38
- * @LastEditors  : carkang.yang@qunar.com
- * @LastEditTime : 2020-01-13 13:12:32
+ * @LastEditors  : yk1062008412
+ * @LastEditTime : 2020-01-16 23:19:11
  * @Description: h5 支付
  */
 
@@ -23,6 +23,7 @@ const h5Conf = require('../config/h5app');
  * @return: 
  */
 exports.unifiedOrder = function({nonce_str, order_desc, order_id, order_amount, user_ip, openId}) {
+  console.log('5')
   const { appId, mChId, deviceNum, unifiedOrderUrl, tradeType, notifyUrl } = h5Conf
   const param = {
     appid: appId,
@@ -34,24 +35,28 @@ exports.unifiedOrder = function({nonce_str, order_desc, order_id, order_amount, 
     out_trade_no: order_id,
     total_fee: order_amount,
     spbill_create_ip: user_ip,
-    notify_url: unifiedOrderUrl,
+    notify_url: notifyUrl,
     trade_type: tradeType,
     openid: openId
   }
   const sign = MSign(param);
   Object.assign(param, {sign: sign});
+  console.log('6')
   return new Promise((resolve, reject) => {
     request({
-      url: notifyUrl,
+      url: unifiedOrderUrl,
       method: 'POST',
       body: json2xml(param)
     }, function(err, response, body){
-      // if(!err && response.statusCode === 200){
+      console.log('7')
+      console.log(err);
+      if(!err && response.statusCode === 200){
+        console.log('8')
         resolve(body)
-      //   resolve(body)
-      // }else{
-      //   reject(err)
-      // }
+      }else{
+        console.log('9')
+        reject(err)
+      }
     })
   })
 }
