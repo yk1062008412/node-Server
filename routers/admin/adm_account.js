@@ -39,6 +39,11 @@ router.post('/admAccountPwdChange', function(req, res){
     admAccountModel.admAccountPwdChange(req, res);
 })
 
+// 重置系统管理员密码
+router.post('/admAccountResetPwd', function(req, res){
+    admAccountModel.admAccountResetPwd(req, res);
+})
+
 // 设置,取消超级管理员(超级管理员多了添加管理员功能)
 router.post('/admAccountSuper', function(req, res){
     admAccountModel.admAccountSuper(req, res);
