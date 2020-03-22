@@ -1,8 +1,8 @@
 /*
  * @Author: yk1062008412
  * @Date: 2020-01-04 16:59:38
- * @LastEditors  : yk1062008412
- * @LastEditTime : 2020-01-16 23:19:11
+ * @LastEditors: yk1062008412
+ * @LastEditTime: 2020-03-22 16:32:32
  * @Description: h5 支付
  */
 
@@ -23,11 +23,10 @@ const h5Conf = require('../config/h5app');
  * @return: 
  */
 exports.unifiedOrder = function({nonce_str, order_desc, order_id, order_amount, user_ip, openId}) {
-  console.log('5')
   const { appId, mChId, deviceNum, unifiedOrderUrl, tradeType, notifyUrl } = h5Conf
   const param = {
     appid: appId,
-    mch_id: mChId,
+    mch_id: mChId.trim(),
     device_info: deviceNum,
     nonce_str: nonce_str,
     sign_type: 'MD5',
@@ -41,20 +40,17 @@ exports.unifiedOrder = function({nonce_str, order_desc, order_id, order_amount, 
   }
   const sign = MSign(param);
   Object.assign(param, {sign: sign});
-  console.log('6')
+  const xmlparam = `<xml>${json2xml(param)}</xml>`;
+  console.log(xmlparam)
   return new Promise((resolve, reject) => {
     request({
       url: unifiedOrderUrl,
       method: 'POST',
-      body: json2xml(param)
+      body: xmlparam
     }, function(err, response, body){
-      console.log('7')
-      console.log(err);
       if(!err && response.statusCode === 200){
-        console.log('8')
         resolve(body)
       }else{
-        console.log('9')
         reject(err)
       }
     })
