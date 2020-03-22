@@ -27,7 +27,7 @@ INSERT INTO admin_account (adm_account, adm_name, adm_passwd, super_adm, last_op
 CREATE TABLE IF NOT EXISTS `user_info`(
     `user_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
     `openid` varchar(50) NOT NULL DEFAULT '' COMMENT '用户openid',
-    `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '用户昵称',
+    `nickname` varchar(100) NOT NULL DEFAULT '' COMMENT '用户昵称',
     `sex` tinyint(3) DEFAULT 0 COMMENT '用户性别0.未知1.男2.女',
     `user_phone` varchar(20) DEFAULT '' COMMENT '用户手机号',
     `language` varchar(50) DEFAULT '' COMMENT '语言',
@@ -48,9 +48,9 @@ CREATE TABLE IF NOT EXISTS `goods_info`(
     `goods_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '商品ID',
     `category_id` int(11) COMMENT '分类ID',
     `goods_name` varchar(50) NOT NULL DEFAULT '' COMMENT '商品名称',
-    `stock_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品进价',
-    `cost_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品原价',
-    `off_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品折扣价',
+    `stock_price` DECIMAL(11, 2) DEFAULT '' COMMENT '商品进价',
+    `cost_price` DECIMAL(11, 2) DEFAULT '' COMMENT '商品原价',
+    `off_price` DECIMAL(11, 2) DEFAULT '' COMMENT '商品折扣价',
     `goods_desc` varchar(100) DEFAULT '' COMMENT '商品描述',
     `stock` int(11) DEFAULT 0 COMMENT '库存',
     `goods_img_url` varchar(255) DEFAULT '' COMMENT '图片URL',
@@ -94,9 +94,7 @@ CREATE TABLE IF NOT EXISTS `user_address`(
     `province` varchar(50) NOT NULL DEFAULT '' COMMENT '省',
     `city` varchar(50) NOT NULL DEFAULT '' COMMENT '市',
     `district` varchar(50) NOT NULL DEFAULT '' COMMENT '区',
-    `street` varchar(150) NOT NULL DEFAULT '' COMMENT '街道',
     `detail_add` varchar(150) DEFAULT '' COMMENT '具体地址',
-    `postal_code` varchar(50) DEFAULT '' COMMENT '邮政编码',
     `tel_phone` varchar(20) NOT NULL DEFAULT '' COMMENT '联系电话',
     `add_time`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
     `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '地址更新时间',
@@ -119,20 +117,22 @@ CREATE TABLE IF NOT EXISTS `user_address`(
 CREATE TABLE IF NOT EXISTS `user_order`(
     `order_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单ID',
     `order_number` varchar(50) NOT NULL DEFAULT '' COMMENT '订单号',
-    `user_id` int(11) NOT NULL COMMENT '用户ID',
-    `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '用户昵称',
-    `address_id` int(11) NOT NULL COMMENT '地址ID',
-    `address_info` varchar(100) DEFAULT '' COMMENT '地址详情信息',
-    `order_status` tinyint(10) NOT NULL DEFAULT 1 COMMENT '订单状态(1待付款2待发货3已发货4已完成5已取消)',
+    `user_id` int(11) COMMENT '用户id',
+    `openid` varchar(50) DEFAULT '' COMMENT '用户openID',
+    `nickname` varchar(100) DEFAULT '' COMMENT '用户昵称',
+    `address_id` int(11) COMMENT '地址ID',
+    `address_info` varchar(150) DEFAULT '' COMMENT '地址详情信息',
+    `book_time` varchar(50) DEFAULT '' COMMENT '预约收货时间',
+    `order_status` tinyint(10) NOT NULL DEFAULT 1 COMMENT '订单状态(1待付款2待发货3已发货4已完成5已回退)',
     `leave_message` varchar(255) DEFAULT '' COMMENT '订单留言',
     `pay_mode` tinyint(10) DEFAULT 0 COMMENT '0.默认1.微信2.支付宝3.现金4.其他',
-    `goods_amount` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品总金额',
-    `order_amount` DECIMAL(11, 2) DEFAULT NULL COMMENT '订单付款总金额',
+    `goods_amount` DECIMAL(11, 2) NOT NULL DEFAULT '0.00' COMMENT '商品总金额',
+    `order_amount` DECIMAL(11, 2) NOT NULL DEFAULT '0.00' COMMENT '订单付款总金额',
     `order_add_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '订单生成时间',
     `order_pay_time` datetime COMMENT '付款时间',
     `order_send_time` datetime COMMENT '发货时间',
     `order_complete_time` datetime COMMENT '订单完成时间',
-    `order_exit_time` datetime COMMENT '订单取消时间',
+    `order_exit_time` datetime COMMENT '订单回退时间',
     `del_flag` tinyint(2) NOT NULL DEFAULT 0 COMMENT '删除标记0.未删除1.已删除',
     `last_edit_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后操作时间',
     `last_operate_account` varchar(30) COMMENT '最后操作人账号',
@@ -149,8 +149,8 @@ CREATE TABLE IF NOT EXISTS `order_info`(
     `goods_name` varchar(50) NOT NULL DEFAULT '' COMMENT '商品名称',
     `goods_img_url` varchar(255) DEFAULT '' COMMENT '图片URL',
     `img_url_id` int(11) COMMENT '图片ID',
-    `cost_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品原价',
-    `last_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '最终成交价',
+    `cost_price` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '商品原价',
+    `off_price` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '最终成交价',
     `goods_num` int(11) NOT NULL DEFAULT 0 COMMENT '商品数量',
     PRIMARY KEY(`order_info_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单详情明细';
@@ -210,9 +210,9 @@ CREATE TABLE IF NOT EXISTS `special_goods`(
     `banner_id` int(11) NOT NULL COMMENT 'banner图ID',
     `goods_id` int(11) NOT NULL COMMENT '商品ID',
     `goods_name` varchar(50) NOT NULL DEFAULT '' COMMENT '商品名称',
-    `stock_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品进价',
-    `cost_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品原价',
-    `off_price` DECIMAL(11, 2) DEFAULT NULL COMMENT '商品折扣价',
+    `stock_price` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '商品进价',
+    `cost_price` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '商品原价',
+    `off_price` DECIMAL(11, 2) DEFAULT '0.00' COMMENT '商品折扣价',
     `goods_desc` varchar(100) DEFAULT '' COMMENT '商品描述',
     `stock` int(11) DEFAULT 0 COMMENT '特价库存',
     `goods_img_url` varchar(255) DEFAULT '' COMMENT '图片URL',
@@ -224,3 +224,26 @@ CREATE TABLE IF NOT EXISTS `special_goods`(
 -- CREATE TABLE IF NOT EXISTS `pay_info`(
     
 -- )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+# 查询所有已上架的标签
+SELECT * FROM goods_category WHERE del_flag = 0 AND category_status = 1
+# 查询标签对应的所有以上家的商品
+SELECT * FROM goods_info WHERE del_flag = 0 AND goods_status = 1 AND category_id = 1
+# 查询banner图列表
+SELECT * FROM banner_info WHERE del_flag = 0 AND banner_status = 1
+# 查询用户信息
+SELECT * FROM user_info WHERE del_flag = 0
+# 查询订单列表
+SELECT * FROM user_order WHERE user_id = 1001 AND order_status = 1
+# 查询订单详情
+SELECT * FROM order_info WHERE order_id = 1001
+# 查询用户地址列表
+SELECT * FROM user_address WHERE user_id = 1001 AND del_flag = 0
+# 查询用户默认地址
+SELECT * FROM user_address WHERE user_id = 1001 AND del_flag = 0 AND is_default_address = 1
+# 新增用户地址
+INSERT INTO user_address (user_id, receive_user_name, province, city, district, street, detail_add, postal_code, tel_phone, is_default_address) VALUES ('1001', '孙悟空', '北京市', '北京市', '海淀区', '苏州街', '维亚大厦100号', '10000', '23456789012', 0)
+# 修改默认地址前先重置默认地址
+UPDATE user_address SET is_default_address=1 WHERE user_id=1001
+# 修改用户地址信息
+UPDATE user_address SET receive_user_name='孙悟空', province='北京市', city='北京市', district='海淀区', street='苏州街', detail_add='维亚大厦100号', postal_code='10000', tel_phone='23456789012', is_default_address=0 WHERE address_id = 2
